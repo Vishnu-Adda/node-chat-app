@@ -9,21 +9,25 @@ socket.on('disconnect', function () {
 });
 
 socket.on('newMessage', function (message) {
+    var formattedTime = moment(message.createdAt).format('h:mm a');
+
     console.log('Got new message', message);
     // A new li element we want to put into the messages ol
     var li = jQuery('<li></li>');
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${message.from} ${formattedTime}: ${message.text}`);
 
     // uses jQuery to add the li to the DOM
     jQuery('#messages').append(li);
 });
 
 socket.on('newLocationMessage', function (message) {
+    var formattedTime = moment(message.createdAt).format('h:mm a');
+
     var li = jQuery('<li></li>');
     // _blank to open link in a new tab
     var a = jQuery('<a target="_blank">My current location</a>');
 
-    li.text(`${message.from}: `);
+    li.text(`${message.from} ${formattedTime}: `);
     a.attr('href', message.url);
     li.append(a);
 
