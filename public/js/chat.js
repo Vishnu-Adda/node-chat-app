@@ -1,5 +1,6 @@
 var socket = io();
 
+// Function to automatically scroll to bottom once chat starts to fill up the page
 function scrollToBottom () {
     // Selectors
     var messages = jQuery('#messages');
@@ -19,6 +20,7 @@ function scrollToBottom () {
     }
 }
 
+// Event handler to allow the client to join a room
 socket.on('connect', function () {
     var params = jQuery.deparam(window.location.search);
 
@@ -34,10 +36,12 @@ socket.on('connect', function () {
     });
 });
 
+// Event handler for when the client exits the room
 socket.on('disconnect', function () {
     console.log('Disconnected from server');
 });
 
+// Have the users list update on the side whenever someone joins or leaves
 socket.on('updateUserList', function (users) {
     var ol = jQuery('<ol></ol>');
 
@@ -48,6 +52,7 @@ socket.on('updateUserList', function (users) {
     jQuery('#users').html(ol);
 });
 
+// When the client makes a new message
 socket.on('newMessage', function (message) {
     var formattedTime = moment(message.createdAt).format('h:mm a');
     var template = jQuery('#message-template').html();
@@ -61,6 +66,7 @@ socket.on('newMessage', function (message) {
     scrollToBottom();
 });
 
+// When the client wants to send their location, using the API
 socket.on('newLocationMessage', function (message) {
     var formattedTime = moment(message.createdAt).format('h:mm a');
     var template = jQuery('#location-message-template').html();
@@ -74,6 +80,7 @@ socket.on('newLocationMessage', function (message) {
     scrollToBottom();
 });
 
+// Adding a new message to the page
 jQuery('#message-form').on('submit', function (e) {
     // Prevents default behavior for the event
     e.preventDefault();
@@ -88,6 +95,7 @@ jQuery('#message-form').on('submit', function (e) {
 });
 
 var locationButton = jQuery('#send-location');
+// How the button should look like while sending location
 locationButton.on('click', function () {
     // Opera mini and old IE don't support the geolocation API
     if (!navigator.geolocation) {
