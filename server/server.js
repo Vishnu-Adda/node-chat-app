@@ -3,6 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
+/* Unpacking functions from included files */
 const { generateMessage, generateLocationMessage } = require('./utils/message');
 const { isRealString } = require('./utils/validation');
 const { Users } = require('./utils/users');
@@ -48,6 +49,7 @@ io.on('connection', (socket) => {
         callback();
     });
 
+//     Event handling for a custom createMessage event, emitting a message to everyone in the room
     socket.on('createMessage', (message, callback) => {
         var user = users.getUser(socket.id);
 
@@ -59,6 +61,7 @@ io.on('connection', (socket) => {
         callback();
     });
 
+//     Event handling to make a request to the Geolocation API... see generateLocationMessage for how its done
     socket.on('createLocationMessage', (coords) => {
         var user = users.getUser(socket.id);
 
@@ -79,6 +82,7 @@ io.on('connection', (socket) => {
     });
 });
 
+// Flexibility to make it listen for both local hosts, and heroku
 server.listen(port, () => {
     console.log(`Server is up on ${port}`);
 });
